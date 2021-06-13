@@ -1,5 +1,10 @@
 # FindMyVaccine
 
+### CLone project 
+```
+git clone https://github.com/deveshkakkar/FindMyVaccine
+```
+
 ### Set up the Project 
 ```
 yarn install
