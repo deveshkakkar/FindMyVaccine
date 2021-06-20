@@ -1,104 +1,73 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Fiind my Vaccine App ffind your nearest covid vaccine
+ * https://github.com/deveshkakkar/FindMyVaccine
  *
- * @format
- * @flow strict-local
  */
-
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+ import React, { useEffect, useState } from 'react';
+ import { FlatList, Text, View } from 'react-native';
+ import StatePicker from './StatePicker';
+ 
+ export default App = () => {
+   const [isLoading, setLoading] = useState(true);
+   const [data, setData] = useState([]);
+   console.log(data);
+ 
+   useEffect(() => {
+     fetch(
+       'https://raw.githubusercontent.com/adhithiravi/React-Hooks-Examples/master/testAPI.json'
+     )
+       .then((response) => response.json())
+       .then((json) => setData(json))
+       .catch((error) => console.error(error))
+       .finally(() => setLoading(false));
+   }, []);
+ 
+   return (
+     <View style={{ flex: 1, padding: 24 }}>
+       <StatePicker />
+       {isLoading ? (
+         <Text>Loading...</Text>
+       ) : (
+         <View
+           style={{
+             flex: 1,
+             flexDirection: 'column',
+             justifyContent: 'space-between',
+           }}>
+           <Text style={{ fontSize: 18, color: 'green', textAlign: 'center' }}>
+             {data.title}
+           </Text>
+           <Text
+             style={{
+               fontSize: 14,
+               color: 'green',
+               textAlign: 'center',
+               paddingBottom: 10,
+             }}>
+             Articles:
+           </Text>
+           <FlatList
+             data={data.articles}
+             keyExtractor={({ id }, index) => id}
+             renderItem={({ item }) => (
+               <Text>{item.id + '. ' + item.title}</Text>
+             )}
+           />
+         </View>
+       )}
+     </View>
+   );
+ };
 
 const getStoresFromApiAsync = async () => {
   try {
     let response = await fetch(
-      'https://www.vaccinespotter.org/api/v0/US.json'
+      'https://www.vaccinespotter.org/api/v0/states/CT.json'
     );
-    let json = await response.json();
-    return json.movies;
+    let StoreJson = await response.json();
+    return StoreJson;
   } catch (error) {
     console.error(error);
   }
 };
 
-export default App;
