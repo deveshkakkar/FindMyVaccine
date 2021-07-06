@@ -71,5 +71,5 @@ import {Picker} from '@react-native-community/picker'
     text: {
        fontSize: 30,
        alignSelf: 'center',
-       color: 'red'
+       color: 'green'
 } })
